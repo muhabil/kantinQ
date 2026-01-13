@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menunggu Pembayaran - Kantin Q</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .fade-in { animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
+        /* Animasi Denyut untuk Status Menunggu */
+        .pulse-text { animation: pulseText 2s infinite; }
+        @keyframes pulseText {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        /* Overlay Sukses */
+        .success-overlay {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(5px);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans text-gray-800 min-h-screen flex flex-col justify-center items-center p-4">
+
+    <div class="bg-white w-full max-w-md rounded-2xl shadow-xl overflow-hidden fade-in border border-gray-200 relative">
+        
+        <div class="bg-blue-600 p-4 text-white text-center">
+            <p class="text-xs text-blue-100 mb-1">Selesaikan pembayaran dalam</p>
+            <div class="text-2xl font-bold font-mono" id="countdown">14:59</div>
+        </div>
+
+        <div class="p-6 text-center">
+            
+            <h2 class="text-gray-500 text-sm font-bold uppercase tracking-wider mb-1">Total Tagihan</h2>
+            <h1 class="text-3xl font-bold text-gray-900 mb-6">Rp 35.000</h1>
+
+            <div class="flex bg-gray-100 p-1 rounded-lg mb-6">
+                <button onclick="switchMethod('qris')" id="btn-qris" class="flex-1 py-2 text-xs font-bold rounded-md bg-white shadow text-blue-600 transition">
+                    QRIS (Scan)
+                </button>
+                <button onclick="switchMethod('va')" id="btn-va" class="flex-1 py-2 text-xs font-bold rounded-md text-gray-500 hover:text-gray-700 transition">
+                    Virtual Account
+                </button>
+            </div>
+
+            <div id="view-qris" class="fade-in">
+                
+                <div onclick="simulateSuccess()" class="cursor-pointer group relative inline-block">
+                    <div class="border-2 border-dashed border-gray-300 rounded-xl p-4 mb-4 group-hover:border-blue-500 transition">
+                        <!-- disini wok upload qris formnya -->
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Logo_QRIS.svg/1200px-Logo_QRIS.svg.png" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-12 bg-white p-1 rounded z-10">
+                        
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=BayarKantinQ-35000" class="w-48 h-48 opacity-90 group-hover:opacity-100 transition">
+                    
+                    </div>
+                </div>
+
+                <div class="mt-2 flex items-center justify-center space-x-2 text-gray-500 pulse-text">
+                    <i class="fas fa-circle-notch fa-spin text-blue-600"></i>
+                    <span class="text-xs font-bold">Menunggu pembayaran masuk...</span>
+                </div>
+                <p class="text-xs text-gray-400 mt-1">Sistem akan mendeteksi otomatis</p>
+            </div>
+
+            <div id="view-va" class="hidden fade-in text-left">
+                <div onclick="simulateSuccess()" class="bg-blue-50 border border-blue-100 rounded-xl p-4 mb-4 cursor-pointer hover:bg-blue-100 transition">
+                    <div class="flex items-center mb-2">
+                        <div class="h-6 w-10 bg-green-600 rounded mr-2 flex items-center justify-center text-white text-[8px] font-bold">BSI</div>
+                        <span class="text-sm font-bold text-gray-700">Bank Syariah Indonesia</span>
+                    </div>
+                    <p class="text-xs text-gray-500 mb-1">Nomor Virtual Account</p>
+                    <div class="flex justify-between items-center bg-white p-2 rounded border border-blue-200">
+                        <span class="font-mono font-bold text-lg text-blue-800 tracking-wider">900 8812 3456 7890</span>
+                        <button class="text-xs text-blue-600 font-bold hover:underline">SALIN</button>
+                    </div>
+                </div>
+                
+                <div class="flex items-center justify-center space-x-2 text-gray-500 mt-4 pulse-text">
+                    <i class="fas fa-sync fa-spin text-gray-400"></i>
+                    <span class="text-xs">Mengecek status pembayaran...</span>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="p-4 border-t border-gray-100 bg-gray-50 text-center">
+            <button onclick="window.location.href='checkout.html'" class="w-full text-gray-400 text-xs font-bold hover:text-red-500 py-2 transition">
+                Batalkan Pesanan
+            </button>
+        </div>
+
+        <div id="success-modal" class="absolute inset-0 z-50 flex flex-col items-center justify-center success-overlay hidden opacity-0 transition-opacity duration-500">
+            <div class="bg-white p-2 rounded-full shadow-lg mb-4 transform scale-0 transition-transform duration-500" id="success-icon">
+                <div class="bg-green-500 rounded-full p-4">
+                    <i class="fas fa-check text-4xl text-white"></i>
+                </div>
+            </div>
+            <h2 class="text-2xl font-bold text-gray-800 mb-1">Pembayaran Berhasil!</h2>
+            <p class="text-sm text-gray-500">Mengalihkan ke pelacakan...</p>
+        </div>
+
+    </div>
+
+    <script>
+        // 1. TIMER
+        window.onload = function () {
+            var duration = 60 * 15;
+            var display = document.querySelector('#countdown');
+            var timer = duration, minutes, seconds;
+            setInterval(function () {
+                minutes = parseInt(timer / 60, 10);
+                seconds = parseInt(timer % 60, 10);
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+                display.textContent = minutes + ":" + seconds;
+                if (--timer < 0) timer = duration;
+            }, 1000);
+        };
+
+        // 2. SWITCH METHOD
+        function switchMethod(method) {
+            const viewQris = document.getElementById('view-qris');
+            const viewVa = document.getElementById('view-va');
+            const btnQris = document.getElementById('btn-qris');
+            const btnVa = document.getElementById('btn-va');
+
+            if (method === 'qris') {
+                viewQris.classList.remove('hidden');
+                viewVa.classList.add('hidden');
+                btnQris.className = "flex-1 py-2 text-xs font-bold rounded-md bg-white shadow text-blue-600 transition";
+                btnVa.className = "flex-1 py-2 text-xs font-bold rounded-md text-gray-500 hover:text-gray-700 transition";
+            } else {
+                viewQris.classList.add('hidden');
+                viewVa.classList.remove('hidden');
+                btnQris.className = "flex-1 py-2 text-xs font-bold rounded-md text-gray-500 hover:text-gray-700 transition";
+                btnVa.className = "flex-1 py-2 text-xs font-bold rounded-md bg-white shadow text-blue-600 transition";
+            }
+        }
+
+        // 3. LOGIC SIMULASI SUKSES (Pengganti Tombol)
+        function simulateSuccess() {
+            const modal = document.getElementById('success-modal');
+            const icon = document.getElementById('success-icon');
+            
+            // Tampilkan Overlay
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                icon.classList.remove('scale-0'); // Efek Pop-up icon
+            }, 50);
+
+            // Redirect ke tracking.html setelah 2 detik
+            setTimeout(() => {
+                window.location.href = 'tracking.html';
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

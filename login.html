@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Kantin Q</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .fade-in { animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
+        /* Custom style untuk icon di dalam input */
+        .input-icon {
+            position: absolute;
+            top: 50%;
+            left: 1rem;
+            transform: translateY(-50%);
+            color: #1f2937; /* Gray-800 */
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans text-gray-800">
+
+    <div class="min-h-screen flex items-center justify-center p-4">
+        
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col md:flex-row w-full max-w-4xl border border-gray-100">
+            
+            <div class="md:w-1/2 bg-blue-600 p-10 flex flex-col justify-between text-white relative overflow-hidden">
+                <div class="absolute top-0 right-0 -mr-10 -mt-10 w-40 h-40 rounded-full bg-blue-500 opacity-50"></div>
+                <div class="absolute bottom-0 left-0 -ml-10 -mb-10 w-40 h-40 rounded-full bg-blue-700 opacity-50"></div>
+
+                <div class="relative z-10">
+                    <h1 class="text-4xl font-bold mb-2"><i class="fas fa-utensils mr-2"></i>Kantin Q</h1>
+                    <p class="text-blue-100 text-sm">Terhubung langsung dengan Siakad Kampus.</p>
+                </div>
+
+                <div class="relative z-10 mt-10">
+                    <h3 class="text-xl font-semibold mb-4">Fitur Integrasi:</h3>
+                    <ul class="space-y-3 text-blue-100 text-sm">
+                        <li class="flex items-center"><i class="fas fa-university mr-2"></i> Data Mahasiswa Otomatis.</li>
+                        <li class="flex items-center"><i class="fas fa-wallet mr-2"></i> Bayar pakai Saldo KTM (Opsional).</li>
+                    </ul>
+                </div>
+                
+                <p class="text-xs text-blue-200 mt-10 relative z-10">© 2026 Kelompok Sadunih</p>
+            </div>
+
+            <div class="md:w-1/2 p-10 flex flex-col justify-center">
+                
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Masuk Akun</h2>
+
+                <div class="flex bg-gray-100 p-1 rounded-lg mb-6">
+                    <button onclick="switchTab('mahasiswa')" id="btn-mhs" class="flex-1 py-2 text-sm font-medium rounded-md bg-white shadow text-blue-600 transition-all">
+                        Mahasiswa (Siakad)
+                    </button>
+                    <button onclick="switchTab('penjual')" id="btn-penjual" class="flex-1 py-2 text-sm font-medium rounded-md text-gray-500 hover:text-gray-700 transition-all">
+                        Mitra Kantin
+                    </button>
+                </div>
+
+                <div id="form-mahasiswa" class="fade-in space-y-5">
+                    
+                    <div>
+                        <label class="block text-gray-500 text-xs font-medium mb-1 pl-1">Perguruan Tinggi</label>
+                        <div class="relative">
+                            <i class="fas fa-university input-icon"></i> <input class="w-full pl-10 pr-4 py-3 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-sm" 
+                                   type="text" placeholder="Contoh: Institut Teknologi PLN">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-gray-500 text-xs font-medium mb-1 pl-1">Username / NIM</label>
+                        <div class="relative">
+                            <i class="fas fa-user input-icon"></i> <input class="w-full pl-10 pr-4 py-3 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-sm" 
+                                   type="text" placeholder="Masukkan Username">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-gray-500 text-xs font-medium mb-1 pl-1">Kata Sandi</label>
+                        <div class="relative">
+                            <i class="fas fa-key input-icon"></i> <input class="w-full pl-10 pr-4 py-3 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-sm" 
+                                   type="password" placeholder=".........">
+                        </div>
+                    </div>
+
+                    <button onclick="window.location.href='home.html'" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition duration-200 shadow-lg mt-4">
+                        Masuk
+                    </button>
+                    
+                    <p class="text-xs text-center text-gray-400 mt-2">Gunakan akun Siakad/Portal Akademik Anda.</p>
+                </div>
+
+                <div id="form-penjual" class="hidden fade-in space-y-4">
+                    <div>
+                        <label class="block text-gray-700 text-xs font-bold mb-1">Email Mitra</label>
+                        <input class="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 bg-gray-50 text-sm" type="email" placeholder="bakso@kantinq.id">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 text-xs font-bold mb-1">Password</label>
+                        <input class="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 bg-gray-50 text-sm" type="password" placeholder="********">
+                    </div>
+                    
+                    <a href="dashboard.html">
+                        <button class="w-full bg-gray-800 hover:bg-gray-900 text-white font-bold py-3 px-4 rounded-lg transition duration-200 shadow-lg">
+                            Masuk Dashboard
+                        </button>
+                    </a>
+
+                    <div class="text-center mt-4">
+                        <a href="regismitra.html" class="text-blue-600 font-bold text-xs hover:underline">Daftar Mitra Baru</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(role) {
+            const formMhs = document.getElementById('form-mahasiswa');
+            const formPenjual = document.getElementById('form-penjual');
+            const btnMhs = document.getElementById('btn-mhs');
+            const btnPenjual = document.getElementById('btn-penjual');
+
+            if (role === 'mahasiswa') {
+                formMhs.classList.remove('hidden');
+                formPenjual.classList.add('hidden');
+                btnMhs.className = "flex-1 py-2 text-sm font-medium rounded-md bg-white shadow text-blue-600 transition-all";
+                btnPenjual.className = "flex-1 py-2 text-sm font-medium rounded-md text-gray-500 hover:text-gray-700 transition-all";
+            } else {
+                formMhs.classList.add('hidden');
+                formPenjual.classList.remove('hidden');
+                btnMhs.className = "flex-1 py-2 text-sm font-medium rounded-md text-gray-500 hover:text-gray-700 transition-all";
+                btnPenjual.className = "flex-1 py-2 text-sm font-medium rounded-md bg-white shadow text-gray-900 transition-all";
+            }
+        }
+    </script>
+</body>
+</html>
