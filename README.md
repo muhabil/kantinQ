@@ -1,2 +1,1 @@
 # kantinQ
-ITPLN - MPPL

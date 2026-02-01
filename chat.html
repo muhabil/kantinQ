@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Penjual - Kantin Q</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .fade-in { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Hide Scrollbar */
+        .hide-scroll::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans text-gray-800 h-screen flex flex-col">
+
+    <nav class="bg-blue-600 px-4 py-3 flex items-center justify-between shadow-md z-20">
+        <div class="flex items-center text-white">
+            <a href="tracking.html" class="mr-4 hover:bg-blue-700 p-2 rounded-full transition">
+                <i class="fas fa-arrow-left text-lg"></i>
+            </a>
+            <div class="relative">
+                <img src="https://images.unsplash.com/photo-1603064752734-4c48eff53d05?w=100&q=80" class="w-10 h-10 rounded-full border-2 border-white object-cover">
+                <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-400 rounded-full border-2 border-blue-600"></div>
+            </div>
+            <div class="ml-3">
+                <h1 class="font-bold text-sm leading-tight">Ayam Geprek Mas Budi</h1>
+                <p class="text-xs text-blue-200">Online</p>
+            </div>
+        </div>
+        <button class="text-white opacity-80 hover:opacity-100">
+            <i class="fas fa-ellipsis-v"></i>
+        </button>
+    </nav>
+
+    <div id="chat-container" class="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-100 hide-scroll pb-20">
+        
+        <div class="text-center text-xs text-gray-400 my-4">Hari Ini</div>
+
+        <div class="flex items-end">
+            <div class="bg-white p-3 rounded-2xl rounded-bl-none shadow-sm max-w-[75%]">
+                <p class="text-sm text-gray-800">Halo Kak Lionel, pesanan ayam gepreknya mau pedas level berapa?</p>
+                <span class="text-[10px] text-gray-400 float-right mt-1 ml-2">11:02</span>
+            </div>
+        </div>
+
+        <div class="flex items-end justify-end">
+            <div class="bg-blue-100 p-3 rounded-2xl rounded-br-none shadow-sm max-w-[75%]">
+                <p class="text-sm text-gray-800">Level sedang aja Pak, jangan terlalu pedas ya.</p>
+                <div class="flex items-center justify-end mt-1 space-x-1">
+                    <span class="text-[10px] text-gray-500">11:03</span>
+                    <i class="fas fa-check-double text-[10px] text-blue-500"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex items-end">
+            <div class="bg-white p-3 rounded-2xl rounded-bl-none shadow-sm max-w-[75%]">
+                <p class="text-sm text-gray-800">Siap Kak! Ditunggu ya, lagi digoreng.</p>
+                <span class="text-[10px] text-gray-400 float-right mt-1 ml-2">11:04</span>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="bg-white p-3 border-t border-gray-200 flex items-center space-x-2 fixed bottom-0 w-full z-20">
+        <button class="text-gray-400 hover:text-gray-600 p-2">
+            <i class="fas fa-plus"></i>
+        </button>
+        <input id="chat-input" type="text" placeholder="Ketik pesan..." class="flex-1 bg-gray-100 border-0 rounded-full px-4 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none" onkeypress="handleEnter(event)">
+        <button onclick="sendMessage()" class="bg-blue-600 hover:bg-blue-700 text-white w-10 h-10 rounded-full flex items-center justify-center shadow-lg transition transform hover:scale-105">
+            <i class="fas fa-paper-plane text-sm"></i>
+        </button>
+    </div>
+
+    <script>
+        function handleEnter(e) {
+            if (e.key === 'Enter') sendMessage();
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const container = document.getElementById('chat-container');
+            const message = input.value.trim();
+
+            if (message) {
+                // Buat Elemen HTML Bubble Baru
+                const bubble = document.createElement('div');
+                bubble.className = "flex items-end justify-end fade-in";
+                
+                // Get jam sekarang
+                const now = new Date();
+                const time = now.getHours() + ":" + (now.getMinutes()<10?'0':'') + now.getMinutes();
+
+                bubble.innerHTML = `
+                    <div class="bg-blue-600 text-white p-3 rounded-2xl rounded-br-none shadow-md max-w-[75%]">
+                        <p class="text-sm">${message}</p>
+                        <div class="flex items-center justify-end mt-1 space-x-1">
+                            <span class="text-[10px] text-blue-200">${time}</span>
+                            <i class="fas fa-check text-[10px] text-blue-200"></i>
+                        </div>
+                    </div>
+                `;
+
+                container.appendChild(bubble);
+                input.value = ''; // Kosongkan input
+                
+                // Scroll ke bawah otomatis
+                container.scrollTop = container.scrollHeight;
+
+                // Simulasi Balasan Penjual (Optional Demo)
+                setTimeout(() => {
+                    const reply = document.createElement('div');
+                    reply.className = "flex items-end fade-in";
+                    reply.innerHTML = `
+                        <div class="bg-white p-3 rounded-2xl rounded-bl-none shadow-sm max-w-[75%]">
+                            <p class="text-sm text-gray-800">Oke siap, noted kak! 👍</p>
+                            <span class="text-[10px] text-gray-400 float-right mt-1 ml-2">${time}</span>
+                        </div>
+                    `;
+                    container.appendChild(reply);
+                    container.scrollTop = container.scrollHeight;
+                }, 2000);
+            }
+        }
+    </script>
+</body>
+</html>
